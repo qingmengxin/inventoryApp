@@ -1,94 +1,97 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/tabs/list"></ion-back-button>
+      <ion-back-button defaultHref="/home"></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ isEditMode ? 'Edit Item' : 'Add Item' }}</ion-title>
+    <ion-title>更新/删除商品</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="showHelp()">
-        <ion-icon name="help-circle"></ion-icon>
-      </ion-button>
-      <ion-button *ngIf="isEditMode" (click)="confirmDelete()" color="danger">
-        <ion-icon name="trash"></ion-icon>
+        <ion-icon slot="icon-only" name="help-circle"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
-  <form [formGroup]="itemForm" (ngSubmit)="onSubmit()">
-    <ion-list>
-      <ion-item>
-        <ion-label position="floating">Item Name</ion-label>
-        <ion-input formControlName="name" required></ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="itemForm.get('name')?.invalid && itemForm.get('name')?.touched">
-        Item name is required (max 50 chars)
-      </ion-text>
+<ion-content class="ion-padding">
+  <ion-searchbar
+    [(ngModel)]="searchTerm"
+    placeholder="输入商品名称搜索"
+    (ionChange)="searchItem()"
+    debounce="500"
+  ></ion-searchbar>
 
-      <ion-item>
-        <ion-label>Category</ion-label>
-        <ion-select formControlName="category" interface="action-sheet">
-          <ion-select-option *ngFor="let cat of categories" [value]="cat">
-            {{ cat }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
+  <div *ngIf="isSearching" class="ion-text-center">
+    <ion-spinner></ion-spinner>
+    <p>搜索中...</p>
+  </div>
 
-      <ion-item>
-        <ion-label position="floating">Quantity</ion-label>
-        <ion-input formControlName="quantity" type="number" required></ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="itemForm.get('quantity')?.invalid && itemForm.get('quantity')?.touched">
-        Valid quantity is required (≥0)
-      </ion-text>
+  <ion-card *ngIf="currentItem">
+    <ion-card-header>
+      <ion-card-title>商品详情</ion-card-title>
+    </ion-card-header>
 
-      <ion-item>
-        <ion-label position="floating">Price</ion-label>
-        <ion-input formControlName="price" type="number" step="0.01" required></ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="itemForm.get('price')?.invalid && itemForm.get('price')?.touched">
-        Valid price is required (≥0.01)
-      </ion-text>
+    <ion-card-content>
+      <form [formGroup]="itemForm">
+        <ion-item>
+          <ion-label position="floating">商品名称</ion-label>
+          <ion-input formControlName="name" type="text"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Supplier</ion-label>
-        <ion-input formControlName="supplier" required></ion-input>
-      </ion-item>
-      <ion-text color="danger" *ngIf="itemForm.get('supplier')?.invalid && itemForm.get('supplier')?.touched">
-        Supplier name is required
-      </ion-text>
+        <ion-item>
+          <ion-label position="floating">类别</ion-label>
+          <ion-select formControlName="category" interface="action-sheet">
+            <ion-select-option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
 
-      <ion-item>
-        <ion-label>Stock Status</ion-label>
-        <ion-select formControlName="status" interface="action-sheet">
-          <ion-select-option *ngFor="let status of statuses" [value]="status">
-            {{ status }}
-          </ion-select-option>
-        </ion-select>
-      </ion-item>
+        <ion-item>
+          <ion-label position="floating">数量</ion-label>
+          <ion-input formControlName="quantity" type="number"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label>Featured Item</ion-label>
-        <ion-toggle 
-          formControlName="featured" 
-          [checked]="itemForm.value.featured === 1"
-          (ionChange)="itemForm.patchValue({ featured: $event.detail.checked ? 1 : 0 })">
-        </ion-toggle>
-      </ion-item>
+        <ion-item>
+          <ion-label position="floating">价格</ion-label>
+          <ion-input formControlName="price" type="number"></ion-input>
+        </ion-item>
 
-      <ion-item>
-        <ion-label position="floating">Special Notes</ion-label>
-        <ion-textarea formControlName="notes"></ion-textarea>
-      </ion-item>
-    </ion-list>
+        <ion-item>
+          <ion-label position="floating">供应商</ion-label>
+          <ion-input formControlName="supplier" type="text"></ion-input>
+        </ion-item>
 
-    <ion-button 
-      type="submit" 
-      expand="block" 
-      [disabled]="itemForm.invalid"
-      class="ion-margin">
-      {{ isEditMode ? 'Update Item' : 'Add Item' }}
-    </ion-button>
-  </form>
+        <ion-item>
+          <ion-label position="floating">库存状态</ion-label>
+          <ion-select formControlName="stockStatus" interface="action-sheet">
+            <ion-select-option *ngFor="let status of stockStatuses" [value]="status">
+              {{ status }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">特色商品</ion-label>
+          <ion-input formControlName="featured" type="number"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="floating">特别备注</ion-label>
+          <ion-textarea formControlName="notes" rows="3"></ion-textarea>
+        </ion-item>
+      </form>
+
+      <ion-button expand="block" color="primary" (click)="updateItem()" [disabled]="!itemForm.valid">
+        更新商品
+      </ion-button>
+
+      <ion-button expand="block" color="danger" (click)="deleteItem()">
+        删除商品
+      </ion-button>
+    </ion-card-content>
+  </ion-card>
+
+  <div *ngIf="!currentItem && !isSearching && searchTerm" class="ion-text-center">
+    <p>未找到匹配的商品</p>
+  </div>
 </ion-content>
