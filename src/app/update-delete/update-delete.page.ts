@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';  
-import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-update-delete',
@@ -13,7 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
     IonicModule,
     CommonModule,
     FormsModule,  
-    HttpClientModule
+    RouterModule
   ]
 })
 export class UpdateDeletePage {}

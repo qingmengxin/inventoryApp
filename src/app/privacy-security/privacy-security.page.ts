@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';  
 
 @Component({
   selector: 'app-privacy-security',
@@ -11,7 +12,8 @@ import { FormsModule } from '@angular/forms';
   imports: [
     IonicModule,
     CommonModule,
-    FormsModule  
+    FormsModule,
+    RouterModule  
   ]
 })
 export class PrivacySecurityPage {}
