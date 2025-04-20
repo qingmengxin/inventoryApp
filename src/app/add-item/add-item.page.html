@@ -1,13 +1,127 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>add-item</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home"></ion-back-button>
+    </ion-buttons>
+    <ion-title>添加新商品</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">add-item</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="ion-padding">
+  <form (ngSubmit)="onSubmit()" #itemForm="ngForm">
+    <ion-list>
+      <!-- 商品名称 -->
+      <ion-item>
+        <ion-label position="stacked">商品名称*</ion-label>
+        <ion-input 
+          type="text" 
+          [(ngModel)]="newItem.name" 
+          name="name" 
+          required
+          placeholder="请输入商品名称">
+        </ion-input>
+      </ion-item>
+
+      <!-- 分类 -->
+      <ion-item>
+        <ion-label position="stacked">分类*</ion-label>
+        <ion-select 
+          [(ngModel)]="newItem.category" 
+          name="category"
+          interface="popover"
+          required>
+          <ion-select-option *ngFor="let cat of categories" [value]="cat">
+            {{ cat }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- 数量 -->
+      <ion-item>
+        <ion-label position="stacked">数量*</ion-label>
+        <ion-input 
+          type="number" 
+          [(ngModel)]="newItem.quantity" 
+          name="quantity"
+          required
+          min="0"
+          placeholder="0">
+        </ion-input>
+      </ion-item>
+
+      <!-- 价格 -->
+      <ion-item>
+        <ion-label position="stacked">价格*</ion-label>
+        <ion-input 
+          type="number" 
+          [(ngModel)]="newItem.price" 
+          name="price"
+          required
+          min="0"
+          step="0.01"
+          placeholder="0.00">
+        </ion-input>
+      </ion-item>
+
+      <!-- 供应商 -->
+      <ion-item>
+        <ion-label position="stacked">供应商*</ion-label>
+        <ion-input 
+          type="text" 
+          [(ngModel)]="newItem.supplier" 
+          name="supplier"
+          required
+          placeholder="输入供应商名称">
+        </ion-input>
+      </ion-item>
+
+      <!-- 库存状态 -->
+      <ion-item>
+        <ion-label position="stacked">库存状态*</ion-label>
+        <ion-select 
+          [(ngModel)]="newItem.stockStatus" 
+          name="stockStatus"
+          interface="popover"
+          required>
+          <ion-select-option *ngFor="let status of stockStatuses" [value]="status">
+            {{ status }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <!-- 特别说明 -->
+      <ion-item>
+        <ion-label position="stacked">特别说明</ion-label>
+        <ion-textarea 
+          [(ngModel)]="newItem.specialNotes" 
+          name="specialNotes"
+          rows="3"
+          placeholder="可选说明信息">
+        </ion-textarea>
+      </ion-item>
+
+      <!-- 是否推荐 -->
+      <ion-item>
+        <ion-label>推荐商品</ion-label>
+        <ion-toggle [(ngModel)]="newItem.featured" name="featured"></ion-toggle>
+      </ion-item>
+    </ion-list>
+
+    <!-- 操作按钮 -->
+    <div class="ion-padding">
+      <ion-button 
+        type="submit" 
+        expand="block" 
+        [disabled]="!itemForm.form.valid">
+        确认添加
+      </ion-button>
+      <ion-button 
+        type="button" 
+        expand="block" 
+        fill="outline" 
+        (click)="cancel()">
+        取消
+      </ion-button>
+    </div>
+  </form>
 </ion-content>
