@@ -1,35 +1,19 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-<<<<<<< Updated upstream
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';  
-import { RouterModule } from '@angular/router';
-=======
 import { Router } from '@angular/router';
 import { InventoryService } from 'src/app/services/inventory.service';
-import { InventoryItem, Category, StockStatus } from 'src/app/models/inventory-item.model';
->>>>>>> Stashed changes
+import { InventoryItem, Category, StockStatus, mapToDatabaseItem } from 'src/app/models/inventory-item.model';
 
 @Component({
   selector: 'app-add-item',
   standalone: true,
-  imports: [FormsModule, IonicModule],
+  imports: [FormsModule, IonicModule, CommonModule],
   templateUrl: './add-item.page.html',
   styleUrls: ['./add-item.page.scss'],
-<<<<<<< Updated upstream
-  standalone: true,
-  imports: [
-    IonicModule,
-    CommonModule,
-    FormsModule,
-    RouterModule  
-  ]
-=======
->>>>>>> Stashed changes
 })
 export class AddItemPage {
-  // 使用正确的类型初始化
   newItem: Omit<InventoryItem, 'id'> = {
     name: '',
     category: Category.Electronics,
@@ -41,36 +25,46 @@ export class AddItemPage {
     specialNotes: ''
   };
 
-  // 枚举值用于模板
   categories = Object.values(Category);
   stockStatuses = Object.values(StockStatus);
 
   constructor(
-    private router: Router,
-    private inventoryService: InventoryService
+    private inventoryService: InventoryService,
+    private router: Router
   ) {}
 
-  onSubmit() {
-    // 在实际应用中，ID应该由后端生成
-    // 这里使用临时ID，实际提交时应该去掉或由后端分配
-    const itemToSubmit: InventoryItem = {
+  // 确保 onSubmit 方法存在且拼写正确
+  onSubmit(): void { 
+    if (!this.newItem.name || this.newItem.name.trim() === '') {
+      alert('商品名称不能为空');
+      return;
+    }
+
+    if (!this.newItem.supplier || this.newItem.supplier.trim() === '') {
+      alert('供应商名称不能为空');
+      return;
+    }
+
+    // 使用 mapToDatabaseItem 映射前端数据
+    const itemToSubmit = mapToDatabaseItem({
       ...this.newItem,
-      id: Date.now() // 临时ID，仅用于演示
-    };
+      id: Date.now(), // 临时 ID
+    });
 
     this.inventoryService.addItem(itemToSubmit).subscribe({
       next: () => {
         alert('商品添加成功！');
         this.router.navigate(['/home']);
       },
-      error: (err) => {
+      error: (err: any) => { // 可以更精确地指定错误类型
         console.error('添加失败:', err);
         alert(`添加失败: ${err.statusText || '未知错误'}`);
       }
     });
   }
 
-  cancel() {
+  // 确保 cancel 方法存在且拼写正确
+  cancel(): void {
     this.router.navigate(['/home']);
   }
 }
