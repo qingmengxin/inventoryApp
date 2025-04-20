@@ -1,0 +1,17 @@
+/* 添加一些自定义样式 */
+ion-textarea {
+  background: var(--ion-color-light);
+  border-radius: 8px;
+  margin-top: 8px;
+  --padding-start: 8px;
+}
+
+ion-select {
+  width: 100%;
+}
+
+/* 必填字段星号 */
+ion-label[position="stacked"]:after {
+  content: " *";
+  color: var(--ion-color-danger);
+}
