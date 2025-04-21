@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -12,7 +12,8 @@ import {
   IonSpinner,
   IonFab,
   IonFabButton,
-  IonIcon
+  IonIcon,
+  IonNote // ✅ 新增
 } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { InventoryService } from '../services/inventory.service';
@@ -41,7 +42,8 @@ import { addIcons } from 'ionicons';
     IonSpinner,
     IonFab,
     IonFabButton,
-    IonIcon
+    IonIcon,
+    IonNote // ✅ 确保已导入
   ]
 })
 export class HomePage implements OnInit, OnDestroy {

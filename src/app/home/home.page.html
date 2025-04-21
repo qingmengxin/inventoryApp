@@ -1,31 +1,40 @@
 <ion-content [fullscreen]="true">
+  <!-- 下拉刷新 -->
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
 
+  <!-- 搜索栏 -->
   <ion-searchbar
-    placeholder="搜索商品"
+    placeholder="搜索商品（名称、分类、供应商）"
     [(ngModel)]="searchQuery"
     (ionInput)="onSearchQueryChange()"
     debounce="300"
   ></ion-searchbar>
 
+  <!-- 加载指示器 -->
   <ion-spinner *ngIf="isLoading" class="ion-padding"></ion-spinner>
 
+  <!-- 商品列表 -->
   <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let item of filteredItems">
       <ion-label>
-        <h2>{{ item.name }}</h2>
+        <h2>{{ item.name || '未命名商品' }}</h2>
         <p>分类: {{ item.category }}</p>
         <p>供应商: {{ item.supplier }}</p>
         <p>数量: {{ item.quantity }}，价格: ¥{{ item.price }}</p>
         <p>库存状态: {{ item.stockStatus }}</p>
-        <p *ngIf="item.featured">⭐ 特色商品</p>
-        <p *ngIf="item.specialNotes">备注: {{ item.specialNotes }}</p>
+
+        <!-- 特色商品标识 -->
+        <ion-note color="warning" *ngIf="item.featured">⭐ 特色商品</ion-note>
+
+        <!-- 可选备注 -->
+        <ion-note color="medium" *ngIf="item.specialNotes">备注: {{ item.specialNotes }}</ion-note>
       </ion-label>
     </ion-item>
   </ion-list>
 
+  <!-- 帮助按钮 -->
   <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="showHelp()">
       <ion-icon [icon]="helpCircle"></ion-icon>
