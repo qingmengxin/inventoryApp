@@ -1,0 +1,10 @@
+{
+  "/ArtGallery": {
+    "target": "https://prog2005.it.scu.edu.au",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  }
+}
+
+  

@@ -1,7 +1,11 @@
 {
-  "name": "inventoryApp",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "angular"
+  "name": "inventoryapp",
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "https://prog2005.it.scu.edu.au/ArtGallery",
+      "changeOrigin": true,  
+      "secure": false       
+    }
+  ]
 }

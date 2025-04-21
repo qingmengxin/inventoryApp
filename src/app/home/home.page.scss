@@ -1,35 +1,73 @@
-h2 {
-  text-align: center;
-  margin-top: 20px;
-  color: #3880ff; // 主色调
-  font-weight: 600;
-}
-
-ion-item {
+ion-content {
   --padding-start: 16px;
-  --inner-padding-end: 16px;
-  margin-top: 10px;
+  --padding-end: 16px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  background: #f9f9f9;
+  height: 100%; /* 确保 ion-content 填满剩余空间 */
 }
 
-ion-list {
-  margin-top: 10px;
-}
-
-ion-button {
-  margin-top: 12px;
+ion-searchbar {
+  margin-bottom: 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 ion-spinner {
   display: block;
-  margin: 20px auto;
+  margin: 32px auto;
 }
 
-p {
-  text-align: center;
-  color: gray;
+ion-item {
+  --background: #fff;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+ion-label h2 {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+ion-label p {
+  font-size: 0.9rem;
+  color: #555;
+  margin: 2px 0;
+}
+
+ion-fab {
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000; /* 确保 fab 按钮在上层显示 */
 }
 
 ion-fab-button {
   --background: #3880ff;
-  --color: white;
+  --color: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
+
+ion-fab-button:hover {
+  transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  ion-content {
+    background: #1e1e1e;
+  }
+
+  ion-item {
+    --background: #2c2c2c;
+  }
+
+  ion-label p {
+    color: #ccc;
+  }
+
+  ion-fab-button {
+    --background: #4c8dff;
+  }
+}
+

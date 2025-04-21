@@ -1,21 +1,27 @@
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient } from '@angular/common/http';
+import { provideIonicAngular } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { 
+  home, add, create, lockClosed, 
+  helpCircleOutline, createOutline, alertCircleOutline 
+} from 'ionicons/icons';
 import { AppComponent } from './app/app.component';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
-import { provideIonicAngular, IonicRouteStrategy } from '@ionic/angular/standalone';
-import { provideHttpClient } from '@angular/common/http'; // 替换 HttpClientModule
-import { provideAnimations } from '@angular/platform-browser/animations';
-import { RouteReuseStrategy } from '@angular/router'; // 导入路由策略接口
+
+// 注册所有图标
+addIcons({ 
+  home, add, create, lockClosed,
+  'help-circle-outline': helpCircleOutline,
+  'create-outline': createOutline,
+  'alert-circle-outline': alertCircleOutline
+});
 
 bootstrapApplication(AppComponent, {
   providers: [
-    provideIonicAngular(), // Ionic 基础配置
-    provideRouter(routes), // 路由配置
-    provideHttpClient(), // 正确提供 HttpClient
-    provideAnimations(),
-    { 
-      provide: RouteReuseStrategy, // 注入 Ionic 路由策略
-      useClass: IonicRouteStrategy 
-    }
+    provideHttpClient(),
+    provideIonicAngular({ mode: 'ios' }),
+    provideRouter(routes)
   ]
-});
+}).catch(err => console.error(err));

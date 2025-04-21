@@ -1,0 +1,47 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Inventory App</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <router-outlet></router-outlet>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row class="ion-align-items-center ion-justify-content-between">
+
+        <ion-col class="ion-text-center">
+          <ion-button fill="clear" (click)="navigate('/home')">
+            <ion-icon name="home" slot="icon-top"></ion-icon>
+            <ion-label>Home</ion-label>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="ion-text-center">
+          <ion-button fill="clear" (click)="navigate('/add-item')">
+            <ion-icon name="add-circle-outline" slot="icon-top"></ion-icon>
+            <ion-label>Add</ion-label>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="ion-text-center">
+          <ion-button fill="clear" (click)="navigate('/update-delete')">
+            <ion-icon name="create-outline" slot="icon-top"></ion-icon>
+            <ion-label>Edit</ion-label>
+          </ion-button>
+        </ion-col>
+
+        <ion-col class="ion-text-center">
+          <ion-button fill="clear" (click)="navigate('/privacy-security')">
+            <ion-icon name="lock-closed-outline" slot="icon-top"></ion-icon>
+            <ion-label>Privacy</ion-label>
+          </ion-button>
+        </ion-col>
+
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

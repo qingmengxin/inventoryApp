@@ -1,57 +1,34 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>Inventory Home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true">
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
 
-<ion-content class="ion-padding">
+  <ion-searchbar
+    placeholder="搜索商品"
+    [(ngModel)]="searchQuery"
+    (ionInput)="onSearchQueryChange()"
+    debounce="300"
+  ></ion-searchbar>
 
-  <h2>Welcome to the Inventory Management App</h2>
+  <ion-spinner *ngIf="isLoading" class="ion-padding"></ion-spinner>
 
-  <!-- 搜索栏 -->
-  <ion-item>
-    <ion-label position="floating">Search by Item Name</ion-label>
-    <ion-input [(ngModel)]="searchQuery" (ionInput)="filterItems()"></ion-input>
-  </ion-item>
-
-  <ion-spinner *ngIf="isLoading" name="dots"></ion-spinner>
-
-  <p *ngIf="filteredItems.length === 0 && !isLoading">No items found.</p>
-
-  <ion-list>
+  <ion-list *ngIf="!isLoading">
     <ion-item *ngFor="let item of filteredItems">
       <ion-label>
-        <h3>{{ item.name }}</h3>
-        <p>Category: {{ item.category }}</p>
-        <p>Quantity: {{ item.quantity }} | Price: ${{ item.price }}</p>
-        <p>Status: {{ item.stockStatus }}</p>
+        <h2>{{ item.name }}</h2>
+        <p>分类: {{ item.category }}</p>
+        <p>供应商: {{ item.supplier }}</p>
+        <p>数量: {{ item.quantity }}，价格: ¥{{ item.price }}</p>
+        <p>库存状态: {{ item.stockStatus }}</p>
+        <p *ngIf="item.featured">⭐ 特色商品</p>
+        <p *ngIf="item.specialNotes">备注: {{ item.specialNotes }}</p>
       </ion-label>
     </ion-item>
   </ion-list>
 
-  <!-- 跳转按钮 -->
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6">
-        <ion-button expand="block" routerLink="/add-item">Add Item</ion-button>
-      </ion-col>
-      <ion-col size="6">
-        <ion-button expand="block" routerLink="/update-delete">Update/Delete</ion-button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <ion-button expand="block" color="medium" routerLink="/privacy-security">
-          Privacy & Security
-        </ion-button>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
-
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
     <ion-fab-button (click)="showHelp()">
-      <ion-icon name="help-circle-outline"></ion-icon>
+      <ion-icon [icon]="helpCircle"></ion-icon>
     </ion-fab-button>
   </ion-fab>
-
 </ion-content>
