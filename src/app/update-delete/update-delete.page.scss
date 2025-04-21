@@ -1,15 +1,18 @@
-ion-content {
-    --background: #f5f5f5;
+/* 添加一些自定义样式 */
+ion-textarea {
+    background: var(--ion-color-light);
+    border-radius: 8px;
+    margin-top: 8px;
+    --padding-start: 8px;
   }
   
-  ion-card {
-    margin: 16px 0;
+  ion-select {
+    width: 100%;
   }
   
-  ion-button {
-    margin-top: 16px;
+  /* 必填字段星号 */
+  ion-label[position="stacked"]:after {
+    content: " *";
+    color: var(--ion-color-danger);
   }
   
-  ion-spinner {
-    margin: 16px auto;
-  }

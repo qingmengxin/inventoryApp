@@ -1,155 +1,115 @@
-import { Component, OnInit } from '@angular/core';
-import { InventoryService } from 'src/app/services/inventory.service';
-import { InventoryItem, Category, StockStatus } from 'src/app/models/inventory-item.model';
-import { AlertController, NavController } from '@ionic/angular';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
-import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { Router, ActivatedRoute } from '@angular/router';
+import { InventoryService } from 'src/app/services/inventory.service';
+import { InventoryItem, Category, StockStatus, mapToDatabaseItem } from 'src/app/models/inventory-item.model';
 
 @Component({
-  selector: 'app-update-delete',
+  selector: 'app-update-delete-item',
+  standalone: true,
+  imports: [FormsModule, IonicModule, CommonModule],
   templateUrl: './update-delete.page.html',
   styleUrls: ['./update-delete.page.scss'],
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    IonicModule,
-    HttpClientModule
-  ]
 })
-export class UpdateDeletePage implements OnInit {
-  itemForm: FormGroup;
+export class UpdateDeletePage {
+  updatedItem: InventoryItem | undefined;
+  itemNameToDelete: string = '';
+  searchQuery: string = '';  // 用于绑定搜索栏
+
   categories = Object.values(Category);
   stockStatuses = Object.values(StockStatus);
-  currentItem: InventoryItem | null = null;
-  isSearching = false;
-  searchTerm = '';
 
   constructor(
     private inventoryService: InventoryService,
-    private alertController: AlertController,
-    private navCtrl: NavController,
-    private fb: FormBuilder
-  ) {
-    this.itemForm = this.fb.group({
-      name: ['', Validators.required],
-      category: ['', Validators.required],
-      quantity: ['', [Validators.required, Validators.min(0)]],
-      price: ['', [Validators.required, Validators.min(0)]],
-      supplier: ['', Validators.required],
-      stockStatus: ['', Validators.required],
-      featured: [0, Validators.required],
-      notes: ['']
-    });
-  }
+    private router: Router,
+    private activatedRoute: ActivatedRoute
+  ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    // 初始加载商品（可选：例如，加载第一个商品或特定商品）
+    this.loadItemByName('');
   }
 
   // 搜索商品
-  searchItem() {
-    if (!this.searchTerm.trim()) {
-      this.showAlert('错误', '请输入商品名称');
-      return;
-    }
+  onSearch(): void {
+    this.loadItemByName(this.searchQuery);
+  }
 
-    this.isSearching = true;
-    this.inventoryService.getItemByName(this.searchTerm).subscribe({
-      next: (item) => {
-        this.currentItem = item;
-        this.itemForm.patchValue(item);
-        this.isSearching = false;
-      },
-      error: (err) => {
-        this.showAlert('错误', '未找到该商品');
-        this.isSearching = false;
-        this.currentItem = null;
-        this.itemForm.reset();
-      }
-    });
+  // 根据商品名称加载商品
+  loadItemByName(query: string): void {
+    if (query.trim()) {
+      this.inventoryService.getItemByName(query).subscribe({
+        next: (item) => {
+          this.updatedItem = item;
+        },
+        error: (err) => {
+          console.error('商品加载失败:', err);
+          alert('未找到匹配的商品');
+        }
+      });
+    } else {
+      this.updatedItem = undefined; // 如果没有搜索条件，清除商品信息
+    }
   }
 
   // 更新商品
-  updateItem() {
-    if (!this.itemForm.valid || !this.currentItem) {
-      this.showAlert('错误', '请填写所有必填字段');
+  onUpdate(): void {
+    if (!this.updatedItem?.name || this.updatedItem?.name.trim() === '') {
+      alert('商品名称不能为空');
       return;
     }
 
-    const updatedItem: InventoryItem = {
-      ...this.currentItem,
-      ...this.itemForm.value
-    };
+    if (!this.updatedItem?.supplier || this.updatedItem?.supplier.trim() === '') {
+      alert('供应商名称不能为空');
+      return;
+    }
 
-    this.inventoryService.updateItem(this.currentItem.name, updatedItem).subscribe({
+    // 使用 mapToDatabaseItem 映射前端数据
+    const itemToUpdate = mapToDatabaseItem(this.updatedItem);
+
+    // 调用服务更新商品
+    this.inventoryService.updateItem(this.updatedItem?.name, itemToUpdate).subscribe({
       next: () => {
-        this.showAlert('成功', '商品已更新');
-        this.currentItem = updatedItem;
+        alert('商品更新成功！');
+        this.router.navigate(['/home']);
       },
-      error: (err) => {
-        this.showAlert('错误', '更新商品时出错');
+      error: (err: any) => {
+        console.error('更新失败:', err);
+        alert(`更新失败: ${err.statusText || '未知错误'}`);
       }
     });
   }
 
   // 删除商品
-  async deleteItem() {
-    if (!this.currentItem) {
-      this.showAlert('错误', '没有可删除的商品');
+  onDelete(): void {
+    if (!this.itemNameToDelete || this.itemNameToDelete.trim() === '') {
+      alert('商品名称不能为空');
       return;
     }
 
-    if (this.currentItem.name === '笔记本电脑') {
-      this.showAlert('错误', '无法删除"笔记本电脑"商品');
+    // 在删除前做确认
+    if (this.itemNameToDelete.toLowerCase() === 'laptop') {
+      alert('“Laptop”商品无法删除');
       return;
     }
 
-    const alert = await this.alertController.create({
-      header: '确认删除',
-      message: `确定要删除 "${this.currentItem.name}" 吗？`,
-      buttons: [
-        {
-          text: '取消',
-          role: 'cancel'
-        },
-        {
-          text: '删除',
-          handler: () => {
-            this.inventoryService.deleteItem(this.currentItem!.name).subscribe({
-              next: () => {
-                this.showAlert('成功', '商品已删除');
-                this.currentItem = null;
-                this.itemForm.reset();
-                this.searchTerm = '';
-              },
-              error: (err) => {
-                this.showAlert('错误', '删除商品时出错');
-              }
-            });
-          }
-        }
-      ]
+    // 调用删除接口
+    this.inventoryService.deleteItem(this.itemNameToDelete).subscribe({
+      next: () => {
+        alert('商品删除成功！');
+        this.router.navigate(['/home']);
+      },
+      error: (err: any) => {
+        console.error('删除失败:', err);
+        alert(`删除失败: ${err.statusText || '未知错误'}`);
+      }
     });
-
-    await alert.present();
   }
 
-  // 显示帮助信息
-  showHelp() {
-    this.showAlert('帮助', '在此页面，您可以搜索商品，然后更新或删除它。\n\n1. 输入商品名称并点击搜索\n2. 修改需要更新的字段\n3. 点击"更新商品"保存更改\n4. 或点击"删除商品"删除该记录\n\n注意：不能删除"笔记本电脑"商品');
-  }
-
-  // 显示警告框
-  private async showAlert(header: string, message: string) {
-    const alert = await this.alertController.create({
-      header,
-      message,
-      buttons: ['确定']
-    });
-    await alert.present();
+  // 取消操作
+  cancel(): void {
+    this.router.navigate(['/home']);
   }
 }

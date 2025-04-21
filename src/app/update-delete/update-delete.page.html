@@ -1,97 +1,80 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button defaultHref="/home"></ion-back-button>
-    </ion-buttons>
-    <ion-title>更新/删除商品</ion-title>
-    <ion-buttons slot="end">
-      <ion-button (click)="showHelp()">
-        <ion-icon slot="icon-only" name="help-circle"></ion-icon>
-      </ion-button>
-    </ion-buttons>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content class="ion-padding">
-  <ion-searchbar
-    [(ngModel)]="searchTerm"
-    placeholder="输入商品名称搜索"
-    (ionChange)="searchItem()"
-    debounce="500"
-  ></ion-searchbar>
-
-  <div *ngIf="isSearching" class="ion-text-center">
-    <ion-spinner></ion-spinner>
-    <p>搜索中...</p>
-  </div>
-
-  <ion-card *ngIf="currentItem">
-    <ion-card-header>
-      <ion-card-title>商品详情</ion-card-title>
-    </ion-card-header>
-
-    <ion-card-content>
-      <form [formGroup]="itemForm">
+    <ion-toolbar>
+      <ion-title>更新/删除商品</ion-title>
+      <ion-buttons slot="end">
+        <ion-button (click)="cancel()">取消</ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <!-- 搜索栏 -->
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearch()" debounce="500" placeholder="搜索商品名称"></ion-searchbar>
+  
+    <ion-card *ngIf="updatedItem">
+      <ion-card-header>
+        <ion-card-title>更新商品</ion-card-title>
+      </ion-card-header>
+  
+      <ion-card-content>
+        <!-- 商品名称输入 -->
         <ion-item>
           <ion-label position="floating">商品名称</ion-label>
-          <ion-input formControlName="name" type="text"></ion-input>
+          <ion-input [(ngModel)]="updatedItem.name" placeholder="请输入商品名称"></ion-input>
         </ion-item>
-
+  
+        <!-- 商品分类选择 -->
         <ion-item>
-          <ion-label position="floating">类别</ion-label>
-          <ion-select formControlName="category" interface="action-sheet">
-            <ion-select-option *ngFor="let category of categories" [value]="category">
-              {{ category }}
-            </ion-select-option>
+          <ion-label>分类</ion-label>
+          <ion-select [(ngModel)]="updatedItem.category">
+            <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
           </ion-select>
         </ion-item>
-
+  
+        <!-- 商品数量输入 -->
         <ion-item>
           <ion-label position="floating">数量</ion-label>
-          <ion-input formControlName="quantity" type="number"></ion-input>
+          <ion-input [(ngModel)]="updatedItem.quantity" type="number" placeholder="请输入商品数量"></ion-input>
         </ion-item>
-
+  
+        <!-- 商品价格输入 -->
         <ion-item>
           <ion-label position="floating">价格</ion-label>
-          <ion-input formControlName="price" type="number"></ion-input>
+          <ion-input [(ngModel)]="updatedItem.price" type="number" placeholder="请输入商品价格"></ion-input>
         </ion-item>
-
+  
+        <!-- 商品供应商输入 -->
         <ion-item>
           <ion-label position="floating">供应商</ion-label>
-          <ion-input formControlName="supplier" type="text"></ion-input>
+          <ion-input [(ngModel)]="updatedItem.supplier" placeholder="请输入商品供应商"></ion-input>
         </ion-item>
-
+  
+        <!-- 商品库存状态选择 -->
         <ion-item>
-          <ion-label position="floating">库存状态</ion-label>
-          <ion-select formControlName="stockStatus" interface="action-sheet">
-            <ion-select-option *ngFor="let status of stockStatuses" [value]="status">
-              {{ status }}
-            </ion-select-option>
+          <ion-label>库存状态</ion-label>
+          <ion-select [(ngModel)]="updatedItem.stockStatus">
+            <ion-select-option *ngFor="let status of stockStatuses" [value]="status">{{ status }}</ion-select-option>
           </ion-select>
         </ion-item>
-
+  
+        <!-- 商品特别备注输入 -->
         <ion-item>
-          <ion-label position="floating">特色商品</ion-label>
-          <ion-input formControlName="featured" type="number"></ion-input>
+          <ion-label position="floating">备注</ion-label>
+          <ion-input [(ngModel)]="updatedItem.specialNotes" placeholder="请输入商品备注"></ion-input>
         </ion-item>
-
+  
+        <!-- 更新按钮 -->
+        <ion-button expand="full" (click)="onUpdate()">更新商品</ion-button>
+  
+        <!-- 删除商品输入框 -->
         <ion-item>
-          <ion-label position="floating">特别备注</ion-label>
-          <ion-textarea formControlName="notes" rows="3"></ion-textarea>
+          <ion-label position="floating">输入商品名称以删除</ion-label>
+          <ion-input [(ngModel)]="itemNameToDelete" placeholder="请输入商品名称"></ion-input>
         </ion-item>
-      </form>
-
-      <ion-button expand="block" color="primary" (click)="updateItem()" [disabled]="!itemForm.valid">
-        更新商品
-      </ion-button>
-
-      <ion-button expand="block" color="danger" (click)="deleteItem()">
-        删除商品
-      </ion-button>
-    </ion-card-content>
-  </ion-card>
-
-  <div *ngIf="!currentItem && !isSearching && searchTerm" class="ion-text-center">
-    <p>未找到匹配的商品</p>
-  </div>
-</ion-content>
+  
+        <!-- 删除按钮 -->
+        <ion-button expand="full" color="danger" (click)="onDelete()">删除商品</ion-button>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
+  
