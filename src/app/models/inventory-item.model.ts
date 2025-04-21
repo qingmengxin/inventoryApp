@@ -51,3 +51,4 @@ export function mapToDatabaseItem(item: Omit<InventoryItem, 'id'> & { id: number
   };
 }
 
+
