@@ -1,31 +1,31 @@
 <ion-header>
     <ion-toolbar>
-      <ion-title>更新/删除商品</ion-title>
+      <ion-title>Update/Delete Products</ion-title>
       <ion-buttons slot="end">
-        <ion-button (click)="cancel()">取消</ion-button>
+        <ion-button (click)="cancel()">cancel</ion-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
   
   <ion-content>
     <!-- 搜索栏 -->
-    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearch()" debounce="500" placeholder="搜索商品名称"></ion-searchbar>
+    <ion-searchbar [(ngModel)]="searchQuery" (ionInput)="onSearch()" debounce="500" placeholder="Search for product name"></ion-searchbar>
   
     <ion-card *ngIf="updatedItem">
       <ion-card-header>
-        <ion-card-title>更新商品</ion-card-title>
+        <ion-card-title>Update product</ion-card-title>
       </ion-card-header>
   
       <ion-card-content>
         <!-- 商品名称输入 -->
         <ion-item>
-          <ion-label position="floating">商品名称</ion-label>
-          <ion-input [(ngModel)]="updatedItem.name" placeholder="请输入商品名称"></ion-input>
+          <ion-label position="floating">Product name</ion-label>
+          <ion-input [(ngModel)]="updatedItem.name" placeholder="Please enter the product name"></ion-input>
         </ion-item>
   
         <!-- 商品分类选择 -->
         <ion-item>
-          <ion-label>分类</ion-label>
+          <ion-label>classification</ion-label>
           <ion-select [(ngModel)]="updatedItem.category">
             <ion-select-option *ngFor="let category of categories" [value]="category">{{ category }}</ion-select-option>
           </ion-select>
@@ -33,25 +33,25 @@
   
         <!-- 商品数量输入 -->
         <ion-item>
-          <ion-label position="floating">数量</ion-label>
-          <ion-input [(ngModel)]="updatedItem.quantity" type="number" placeholder="请输入商品数量"></ion-input>
+          <ion-label position="floating">quantity</ion-label>
+          <ion-input [(ngModel)]="updatedItem.quantity" type="number" placeholder="Please enter the quantity of the product"></ion-input>
         </ion-item>
   
         <!-- 商品价格输入 -->
         <ion-item>
-          <ion-label position="floating">价格</ion-label>
-          <ion-input [(ngModel)]="updatedItem.price" type="number" placeholder="请输入商品价格"></ion-input>
+          <ion-label position="floating">price</ion-label>
+          <ion-input [(ngModel)]="updatedItem.price" type="number" placeholder="Please enter the product price"></ion-input>
         </ion-item>
   
         <!-- 商品供应商输入 -->
         <ion-item>
-          <ion-label position="floating">供应商</ion-label>
-          <ion-input [(ngModel)]="updatedItem.supplier" placeholder="请输入商品供应商"></ion-input>
+          <ion-label position="floating">supplier</ion-label>
+          <ion-input [(ngModel)]="updatedItem.supplier" placeholder="Please enter the supplier of the product"></ion-input>
         </ion-item>
   
         <!-- 商品库存状态选择 -->
         <ion-item>
-          <ion-label>库存状态</ion-label>
+          <ion-label>Inventory Status</ion-label>
           <ion-select [(ngModel)]="updatedItem.stockStatus">
             <ion-select-option *ngFor="let status of stockStatuses" [value]="status">{{ status }}</ion-select-option>
           </ion-select>
@@ -59,21 +59,21 @@
   
         <!-- 商品特别备注输入 -->
         <ion-item>
-          <ion-label position="floating">备注</ion-label>
-          <ion-input [(ngModel)]="updatedItem.specialNotes" placeholder="请输入商品备注"></ion-input>
+          <ion-label position="floating">notes</ion-label>
+          <ion-input [(ngModel)]="updatedItem.specialNotes" placeholder="Please enter the product remarks"></ion-input>
         </ion-item>
   
         <!-- 更新按钮 -->
-        <ion-button expand="full" (click)="onUpdate()">更新商品</ion-button>
+        <ion-button expand="full" (click)="onUpdate()">Update product</ion-button>
   
         <!-- 删除商品输入框 -->
         <ion-item>
-          <ion-label position="floating">输入商品名称以删除</ion-label>
-          <ion-input [(ngModel)]="itemNameToDelete" placeholder="请输入商品名称"></ion-input>
+          <ion-label position="floating">Enter product name to delete</ion-label>
+          <ion-input [(ngModel)]="itemNameToDelete" placeholder="Please enter the product name"></ion-input>
         </ion-item>
   
         <!-- 删除按钮 -->
-        <ion-button expand="full" color="danger" (click)="onDelete()">删除商品</ion-button>
+        <ion-button expand="full" color="danger" (click)="onDelete()">Delete product</ion-button>
       </ion-card-content>
     </ion-card>
   </ion-content>

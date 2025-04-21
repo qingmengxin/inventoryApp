@@ -45,8 +45,8 @@ export class UpdateDeletePage {
           this.updatedItem = item;
         },
         error: (err) => {
-          console.error('商品加载失败:', err);
-          alert('未找到匹配的商品');
+          console.error('Product loading failed:', err);
+          alert('No matching product found');
         }
       });
     } else {
@@ -57,12 +57,12 @@ export class UpdateDeletePage {
   // 更新商品
   onUpdate(): void {
     if (!this.updatedItem?.name || this.updatedItem?.name.trim() === '') {
-      alert('商品名称不能为空');
+      alert('The product name cannot be empty');
       return;
     }
 
     if (!this.updatedItem?.supplier || this.updatedItem?.supplier.trim() === '') {
-      alert('供应商名称不能为空');
+      alert('Supplier name cannot be empty');
       return;
     }
 
@@ -72,12 +72,12 @@ export class UpdateDeletePage {
     // 调用服务更新商品
     this.inventoryService.updateItem(this.updatedItem?.name, itemToUpdate).subscribe({
       next: () => {
-        alert('商品更新成功！');
+        alert('Product update successful！');
         this.router.navigate(['/home']);
       },
       error: (err: any) => {
-        console.error('更新失败:', err);
-        alert(`更新失败: ${err.statusText || '未知错误'}`);
+        console.error('Update failed:', err);
+        alert(`Update failed: ${err.statusText || 'unknown error'}`);
       }
     });
   }
@@ -85,25 +85,25 @@ export class UpdateDeletePage {
   // 删除商品
   onDelete(): void {
     if (!this.itemNameToDelete || this.itemNameToDelete.trim() === '') {
-      alert('商品名称不能为空');
+      alert('The product name cannot be empty');
       return;
     }
 
     // 在删除前做确认
     if (this.itemNameToDelete.toLowerCase() === 'laptop') {
-      alert('“Laptop”商品无法删除');
+      alert('“Laptop” product cannot be deleted');
       return;
     }
 
     // 调用删除接口
     this.inventoryService.deleteItem(this.itemNameToDelete).subscribe({
       next: () => {
-        alert('商品删除成功！');
+        alert('Product deleted successfully！');
         this.router.navigate(['/home']);
       },
       error: (err: any) => {
-        console.error('删除失败:', err);
-        alert(`删除失败: ${err.statusText || '未知错误'}`);
+        console.error('Delete failed:', err);
+        alert(`Delete failed: ${err.statusText || 'unknown error'}`);
       }
     });
   }

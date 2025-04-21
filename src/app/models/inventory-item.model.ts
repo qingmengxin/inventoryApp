@@ -31,11 +31,11 @@ export interface InventoryItem {
 export function mapToDatabaseItem(item: Omit<InventoryItem, 'id'> & { id: number }): any {
   // 检查必填字段，避免提交空值
   if (!item.name || item.name.trim() === '') {
-    throw new Error('商品名称不能为空');
+    throw new Error('The product name cannot be empty');
   }
 
   if (!item.supplier || item.supplier.trim() === '') {
-    throw new Error('供应商名称不能为空');
+    throw new Error('Supplier name cannot be empty');
   }
 
   return {

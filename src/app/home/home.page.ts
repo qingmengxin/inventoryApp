@@ -13,7 +13,7 @@ import {
   IonFab,
   IonFabButton,
   IonIcon,
-  IonNote // ✅ 新增
+  IonNote 
 } from '@ionic/angular/standalone';
 import { RouterModule } from '@angular/router';
 import { InventoryService } from '../services/inventory.service';
@@ -43,7 +43,7 @@ import { addIcons } from 'ionicons';
     IonFab,
     IonFabButton,
     IonIcon,
-    IonNote // ✅ 确保已导入
+    IonNote 
   ]
 })
 export class HomePage implements OnInit, OnDestroy {
@@ -73,31 +73,31 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async doRefresh(event: CustomEvent) {
-    console.log('刷新中...');
+    console.log('Refreshing in progress...');
     await this.loadItems();
     (event.target as HTMLIonRefresherElement)?.complete();
   }
 
   private async loadItems(): Promise<void> {
     this.isLoading = true;
-    console.log('加载商品...');
+    console.log('Load product...');
     this.inventoryService.getAllItems().subscribe({
       next: (data) => {
-        console.log('商品数据:', data);
+        console.log('Product data:', data);
         this.items = data;
         this.filteredItems = data;
         this.isLoading = false;
       },
       error: () => {
-        console.error('加载商品失败');
+        console.error('Loading product failed');
         this.isLoading = false;
-        alert('数据加载失败，请稍后重试');
+        alert('Data loading failed, please try again later');
       }
     });
   }
 
   onSearchQueryChange() {
-    console.log('搜索查询:', this.searchQuery);
+    console.log('Search Query:', this.searchQuery);
     this.searchSubject.next(this.searchQuery.trim().toLowerCase());
   }
 
@@ -109,7 +109,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   showHelp() {
-    console.log('显示帮助');
-    alert('操作指南：\n\n- 下拉可刷新商品列表\n- 可通过名称/分类/供应商进行搜索\n- 点击右下角按钮显示帮助');
+    console.log('Display Help');
+    alert('operation guide：\n\n- Pull down to refresh the product list\n- Can be searched by name/category/supplier\n- Click the button in the bottom right corner to display help');
   }
 }

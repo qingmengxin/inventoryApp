@@ -36,12 +36,12 @@ export class AddItemPage {
   // 确保 onSubmit 方法存在且拼写正确
   onSubmit(): void { 
     if (!this.newItem.name || this.newItem.name.trim() === '') {
-      alert('商品名称不能为空');
+      alert('The product name cannot be empty');
       return;
     }
 
     if (!this.newItem.supplier || this.newItem.supplier.trim() === '') {
-      alert('供应商名称不能为空');
+      alert('Supplier name cannot be empty');
       return;
     }
 
@@ -53,12 +53,12 @@ export class AddItemPage {
 
     this.inventoryService.addItem(itemToSubmit).subscribe({
       next: () => {
-        alert('商品添加成功！');
+        alert('Product added successfully！');
         this.router.navigate(['/home']);
       },
       error: (err: any) => { // 可以更精确地指定错误类型
-        console.error('添加失败:', err);
-        alert(`添加失败: ${err.statusText || '未知错误'}`);
+        console.error('Add failed:', err);
+        alert(`Add failed: ${err.statusText || 'unknown error'}`);
       }
     });
   }
